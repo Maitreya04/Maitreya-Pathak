@@ -2,7 +2,7 @@
   min-height: 100vh;
   padding: 20px;
   background: repeating-conic-gradient(#2a4b8d 0% 25%, #1a325e 0% 50%) 50% / 2px 2px;
-  font-family: "Chicago", -apple-system, system-ui, sans-serif;
+  font-family: var(--font-instrument-serif), serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -132,7 +132,7 @@
 }
 
 .list code {
-  font-family: Monaco, monospace;
+  font-family: var(--font-instrument-serif), serif;
   color: #1a325e;
   background-color: #f5f8ff;
   border: 1px solid #2a4b8d;

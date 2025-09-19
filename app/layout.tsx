@@ -1,32 +1,15 @@
 /**
  * Root layout component that wraps all pages in the application.
  * This layout:
- * - Sets up Geist fonts (both Sans and Mono variants)
+ * - Sets up Instrument Serif as the primary font
  * - Configures metadata like title and favicon
  * - Provides the basic HTML structure
  * - Applies font variables to the entire app
  */
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import { instrumentSerif } from "./fonts";
 import "./styles/globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: "Maitreya's prototypes",
@@ -48,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${instrumentSerif.className}`}>
+      <body className={`${instrumentSerif.variable} ${instrumentSerif.className}`}>
         {children}
       </body>
     </html>

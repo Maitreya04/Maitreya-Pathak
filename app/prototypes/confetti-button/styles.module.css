@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-instrument-serif), serif;
   position: relative;
   overflow: hidden;
 }
@@ -59,7 +59,7 @@
 .matrixDrop {
   position: fixed;
   color: #00ff00;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-instrument-serif), serif;
   font-size: 14px;
   font-weight: bold;
   text-shadow: 0 0 5px #00ff00;
@@ -319,7 +319,7 @@
   border: 2px solid #00ffff;
   border-radius: 8px;
   color: #00ffff;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-instrument-serif), serif;
   font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
