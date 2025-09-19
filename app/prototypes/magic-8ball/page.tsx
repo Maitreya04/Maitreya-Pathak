@@ -106,8 +106,9 @@ function EightBall({ position, onShoot }: { position: [number, number, number], 
   }));
 
   const shootBall = useCallback(() => {
-    const force = [0, 0, -8];
-    api.applyImpulse(force, [0, 0, 0]);
+    const force: [number, number, number] = [0, 0, -8];
+    const position: [number, number, number] = [0, 0, 0];
+    api.applyImpulse(force, position);
     onShoot();
   }, [api, onShoot]);
 
