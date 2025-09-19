@@ -1,5 +1,3 @@
-"use client";
-
 // Template for creating a new prototype
 // To use this template:
 // 1. Create a new folder in app/prototypes with your prototype name
@@ -8,53 +6,79 @@
 // 4. Rename and customize the component and styles as needed
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
 import styles from './styles.module.css';
 
 export default function PrototypeTemplate() {
-
-  const [isHovered, setIsHovered] = useState(false);
+  // Available prototypes in the lab
+  const prototypes = [
+    {
+      title: 'Getting Started',
+      description: 'Learn how to create a prototype',
+      path: '/prototypes/example',
+      icon: '📁'
+    },
+    {
+      title: 'Confetti Button',
+      description: 'Interactive button with colorful confetti explosion',
+      path: '/prototypes/confetti-button',
+      icon: '🎉'
+    },
+    {
+      title: 'Magic 8-Ball Pool',
+      description: 'Realistic 3D pool game with physics and mystical answers',
+      path: '/prototypes/magic-8ball',
+      icon: '🎱'
+    },
+    {
+      title: 'Typography Generator',
+      description: 'Interactive typography generator with p5.js animations',
+      path: '/prototypes/typography-generator',
+      icon: '✨'
+    },
+    {
+      title: 'Liquid Chrome Cursor',
+      description: 'Smooth liquid chrome cursor effects',
+      path: '/prototypes/liquid-chrome-cursor',
+      icon: '💧'
+    }
+  ];
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className={styles.welcome}
-        >
-          <h1>Welcome to Your Prototype!</h1>
-          <p>This template shows you how to add interactive elements.</p>
-        </motion.div>
+        <div className={styles.welcome}>
+          <h1>Prototype Template</h1>
+          <p>This template shows you how to add interactive elements and lists all available prototypes.</p>
+        </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
-          className={styles.interactiveButton}
-        >
-          <motion.span
-            animate={{ 
-              color: isHovered ? "#ff6b6b" : "#333",
-              textShadow: isHovered ? "0 0 10px #ff6b6b" : "none"
-            }}
-          >
-            Hover me!
-          </motion.span>
-        </motion.button>
+        <button className={styles.simpleButton}>
+          Click me
+        </button>
 
-        <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className={styles.card}
-        >
-          <h3>Animated Card</h3>
-          <p>This card slides in from the left with a delay.</p>
-        </motion.div>
+        <div className={styles.card}>
+          <h3>Simple Card</h3>
+          <p>This is a basic card without animations.</p>
+        </div>
+
+        {/* Prototype Gallery */}
+        <div className={styles.prototypeGallery}>
+          <h3>Available Prototypes</h3>
+          <p>Explore all the prototypes in the lab:</p>
+          
+          <div className={styles.prototypeGrid}>
+            {prototypes.map((prototype, index) => (
+              <div key={index} className={styles.prototypeCard}>
+                <Link href={prototype.path} className={styles.prototypeLink}>
+                  <div className={styles.prototypeIcon}>{prototype.icon}</div>
+                  <div className={styles.prototypeContent}>
+                    <h4>{prototype.title}</h4>
+                    <p>{prototype.description}</p>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     </div>
   );

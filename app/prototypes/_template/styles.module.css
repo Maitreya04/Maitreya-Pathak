@@ -69,3 +69,122 @@
   color: #666;
   line-height: 1.6;
 }
+
+.simpleButton {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 2rem 0;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.simpleButton:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Prototype Gallery Styles */
+.prototypeGallery {
+  margin-top: 3rem;
+  text-align: left;
+}
+
+.prototypeGallery h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  text-align: center;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.prototypeGallery > p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.prototypeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.prototypeCard {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.prototypeCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.prototypeLink {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.prototypeLink:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.prototypeIcon {
+  font-size: 2.5rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.prototypeContent h4 {
+  color: #333;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.prototypeContent p {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main {
+    max-width: 100%;
+  }
+  
+  .prototypeGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .prototypeLink {
+    padding: 1rem;
+  }
+  
+  .prototypeIcon {
+    font-size: 2rem;
+    margin-right: 0.8rem;
+  }
+}

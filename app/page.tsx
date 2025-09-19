@@ -24,6 +24,18 @@ export default function Home() {
       path: '/prototypes/magic-8ball',
       icon: '🎱'
     },
+    {
+      title: 'Typography Generator',
+      description: 'Interactive typography generator with p5.js animations and real-time controls',
+      path: '/prototypes/typography-generator',
+      icon: '✨'
+    },
+    {
+      title: 'Liquid Chrome Cursor',
+      description: 'Smooth liquid chrome cursor effects with mesmerizing animations',
+      path: '/prototypes/liquid-chrome-cursor',
+      icon: '💧'
+    },
     // Add your new prototypes here like this:
     // {
     //   title: 'Your new prototype',
