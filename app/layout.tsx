@@ -8,7 +8,8 @@
  */
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Manrope } from "next/font/google";
+import { instrumentSerif } from "./fonts";
 import "./styles/globals.css";
 
 const geistSans = Geist({
@@ -21,8 +22,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
-  title: "Elizabeth's prototypes",
+  title: "Maitreya's prototypes",
   description: "The home for all my prototypes",
   icons: {
     icon: [
@@ -41,7 +48,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${instrumentSerif.className}`}>
         {children}
       </body>
     </html>

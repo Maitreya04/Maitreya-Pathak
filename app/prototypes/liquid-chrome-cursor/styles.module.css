@@ -1,0 +1,143 @@
+/* Hide the default cursor, but keep it during keyboard focus for accessibility */
+.demo {
+  cursor: none;
+  min-height: 100svh;
+  background: radial-gradient(1200px 700px at 70% 20%, #0b0b0f, #050507 60%, #000 100%);
+  color: #d0d0d0;
+  font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 3rem;
+}
+
+/* Restore default cursor for keyboard users */
+.demo.userIsTabbing {
+  cursor: auto;
+}
+
+.demo h1 {
+  font-size: clamp(28px, 4vw, 56px);
+  margin: 0 0 0.25em;
+  letter-spacing: 0.02em;
+}
+
+.demo p {
+  opacity: 0.8;
+  max-width: 60ch;
+  margin: 0 auto 1rem;
+}
+
+.demo a {
+  color: #9bd6ff;
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+  transition: color 0.2s ease;
+}
+
+.demo a:hover {
+  color: #b8e1ff;
+}
+
+.demo button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.demo button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.demo button:active {
+  transform: translateY(0);
+}
+
+/* Container for all our custom cursor parts */
+.chromeCursor,
+.chromeCursorTrail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Main liquid blob */
+.chromeCursorBlob {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* Multi-layered gradients to fake chrome + rainbow iridescence */
+  background:
+    radial-gradient(120% 120% at 30% 30%, #ffffff 0 18%, #cfcfcf 30%, #6b6b6b 45%, #0d0d0d 58%, #000 65%, transparent 75%),
+    conic-gradient(from 210deg, #ff2d2d, #ffa600, #ffe600, #4dff46, #2dd0ff, #6a6bff, #ff2dfc, #ff2d2d);
+  filter: contrast(220%) saturate(130%);
+  mix-blend-mode: screen;          /* pops on dark backgrounds */
+  box-shadow:
+    0 0 var(--glow) rgba(255,255,255,.35),
+    inset 0 -2px 8px rgba(0,0,0,.5),
+    inset 0 6px 16px rgba(255,255,255,.65);
+  transform: translate3d(0,0,0);
+  will-change: transform, filter, background-position;
+}
+
+/* Specular highlights (little chrome sparkles) */
+.chromeCursorSpark {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(255,255,255,.2) 35%, transparent 60%);
+  filter: blur(0.2px) contrast(140%);
+  mix-blend-mode: screen;
+}
+
+/* The trail items reuse the same blob style but smaller and softer */
+.trailBlob {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(120% 120% at 30% 30%, #ffffff 0 18%, #cfcfcf 30%, #6b6b6b 45%, #0d0d0d 58%, #000 65%, transparent 75%),
+    conic-gradient(from 210deg, #ff2d2d, #ffa600, #ffe600, #4dff46, #2dd0ff, #6a6bff, #ff2dfc, #ff2d2d);
+  opacity: 0.55;
+  filter: blur(0.2px) contrast(200%) saturate(120%);
+  transform: scale(0.85);
+  mix-blend-mode: screen;
+  box-shadow:
+    0 0 var(--glow) rgba(255,255,255,.35),
+    inset 0 -2px 8px rgba(0,0,0,.5),
+    inset 0 6px 16px rgba(255,255,255,.65);
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .chromeCursor,
+  .chromeCursorTrail {
+    display: none !important;
+  }
+  
+  .demo {
+    cursor: auto;
+  }
+}
+
+/* Mobile responsiveness - hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .chromeCursor,
+  .chromeCursorTrail {
+    display: none !important;
+  }
+  
+  .demo {
+    cursor: auto;
+  }
+}

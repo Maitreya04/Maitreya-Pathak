@@ -1,3 +1,10 @@
+/* CSS Custom Properties for Liquid Chrome Cursor */
+:root {
+  --cursor-size: 36px;      /* base size of the blob */
+  --trail-length: 6;        /* number of trailing blobs */
+  --glow: 18px;             /* outer bloom */
+}
+
 /* CSS Reset */
 /* 1. Use a more-intuitive box-sizing model */
 *, *::before, *::after {

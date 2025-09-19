@@ -1,6 +1,7 @@
-import { Instrument_Sans } from 'next/font/google';
+import { Instrument_Serif } from 'next/font/google';
 
-export const instrumentSans = Instrument_Sans({
+export const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   display: 'swap',
-}); 
+  weight: ['400'],
+});
