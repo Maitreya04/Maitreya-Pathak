@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import styles from './styles.module.css';
 
 // Game of Life Text Generator
@@ -414,6 +415,9 @@ export default function GameOfLifeText({}: GameOfLifeProps) {
         >
           {isRunning ? 'Stop' : 'Start'}
         </button>
+        <Link href="/" className={styles.button}>
+          Back to Home
+        </Link>
       </div>
 
       <div className={styles.canvasContainer}>
