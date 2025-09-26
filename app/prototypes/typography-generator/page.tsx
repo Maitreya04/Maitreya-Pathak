@@ -9,72 +9,286 @@ export default function TypographyGenerator() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const p5InstanceRef = useRef<p5 | null>(null);
   
-  // State for typography controls
-  const [text, setText] = useState('Hello World');
-  const [fontSize, setFontSize] = useState(48);
-  const [fontWeight, setFontWeight] = useState(400);
-  const [textColor, setTextColor] = useState('#000000');
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-  const [fontFamily, setFontFamily] = useState('Arial');
-  const [textAlign, setTextAlign] = useState('center');
-  const [isAnimated, setIsAnimated] = useState(false);
+  // State for animation control
+  const [isAnimated, setIsAnimated] = useState(true);
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
+    // Flock class to manage the array of all the letters
+    class Flock {
+      letters: Letter[];
+
+      constructor() {
+        this.letters = [];
+      }
+
+      run() {
+        for (let letter of this.letters) {
+          letter.run(this.letters);
+        }
+      }
+
+      addLetter(l: Letter) {
+        this.letters.push(l);
+      }
+    }
+
+    // Letter class (flocking behavior with letters)
+    class Letter {
+      acceleration: any;
+      velocity: any;
+      position: any;
+      size: number;
+      maxSpeed: number;
+      maxForce: number;
+      color: any;
+      p5Instance: p5;
+      char: string;
+
+      constructor(x: number, y: number, p: p5) {
+        this.p5Instance = p;
+        this.acceleration = p.createVector(0, 0);
+        this.velocity = p.createVector(p.random(-1, 1), p.random(-1, 1));
+        this.position = p.createVector(x, y);
+        this.size = 10.0; // Slightly smaller for better performance
+        this.maxSpeed = 2.5; // Slightly slower for smoother animation
+        this.maxForce = 0.03; // Reduced force for smoother movement
+        // Fire color palette - random fire colors
+        const fireColors = [
+          p.color(255, 100, 0),   // Orange
+          p.color(255, 150, 0),   // Yellow-orange
+          p.color(255, 200, 0),   // Bright yellow
+          p.color(255, 50, 0),    // Red-orange
+          p.color(255, 255, 100)  // Light yellow
+        ];
+        this.color = fireColors[p.floor(p.random(fireColors.length))];
+        
+        // Random letter for this letter agent
+        const ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        this.char = ABC[p.floor(p.random(ABC.length))];
+      }
+
+      run(letters: Letter[]) {
+        this.flock(letters);
+        this.update();
+        this.borders();
+        this.render();
+      }
+
+      applyForce(force: any) {
+        this.acceleration.add(force);
+      }
+
+      flock(letters: Letter[]) {
+        let separation = this.separate(letters);
+        let alignment = this.align(letters);
+        let cohesion = this.cohesion(letters);
+
+        separation.mult(1.5);
+        alignment.mult(1.0);
+        cohesion.mult(1.0);
+
+        this.applyForce(separation);
+        this.applyForce(alignment);
+        this.applyForce(cohesion);
+      }
+
+      update() {
+        this.velocity.add(this.acceleration);
+        this.velocity.limit(this.maxSpeed);
+        this.position.add(this.velocity);
+        this.acceleration.mult(0);
+      }
+
+      seek(target: any) {
+        let desired = p5.Vector.sub(target, this.position);
+        desired.normalize();
+        desired.mult(this.maxSpeed);
+        let steer = p5.Vector.sub(desired, this.velocity);
+        steer.limit(this.maxForce);
+        return steer;
+      }
+
+      render() {
+        let theta = this.velocity.heading() + this.p5Instance.radians(90);
+        
+        // Create fire trail effect with multiple layers
+        this.p5Instance.push();
+        this.p5Instance.translate(this.position.x, this.position.y);
+        this.p5Instance.rotate(theta);
+        
+        // Outer glow layer (larger, more transparent)
+        this.p5Instance.fill(255, 100, 0, 30); // Orange glow
+        this.p5Instance.textSize(this.size * 1.5);
+        this.p5Instance.text(this.char, 0, 0);
+        
+        // Middle glow layer
+        this.p5Instance.fill(255, 150, 0, 60); // Yellow-orange
+        this.p5Instance.textSize(this.size * 1.2);
+        this.p5Instance.text(this.char, 0, 0);
+        
+        // Inner core (brightest)
+        this.p5Instance.fill(255, 200, 0, 120); // Bright yellow
+        this.p5Instance.textSize(this.size);
+        this.p5Instance.text(this.char, 0, 0);
+        
+        // White hot center
+        this.p5Instance.fill(255, 255, 200, 180); // White-hot center
+        this.p5Instance.textSize(this.size * 0.8);
+        this.p5Instance.text(this.char, 0, 0);
+        
+        this.p5Instance.pop();
+      }
+
+      borders() {
+        if (this.position.x < -this.size) {
+          this.position.x = this.p5Instance.width + this.size;
+        }
+        if (this.position.y < -this.size) {
+          this.position.y = this.p5Instance.height + this.size;
+        }
+        if (this.position.x > this.p5Instance.width + this.size) {
+          this.position.x = -this.size;
+        }
+        if (this.position.y > this.p5Instance.height + this.size) {
+          this.position.y = -this.size;
+        }
+      }
+
+      separate(letters: Letter[]) {
+        let desiredSeparation = 20.0; // Reduced for better performance
+        let steer = this.p5Instance.createVector(0, 0);
+        let count = 0;
+
+        for (let letter of letters) {
+          let distanceToNeighbor = p5.Vector.dist(this.position, letter.position);
+          if (distanceToNeighbor > 0 && distanceToNeighbor < desiredSeparation) {
+            let diff = p5.Vector.sub(this.position, letter.position);
+            diff.normalize();
+            diff.div(distanceToNeighbor);
+            steer.add(diff);
+            count++;
+            // Early exit for performance - limit to 5 neighbors
+            if (count >= 5) break;
+          }
+        }
+
+        if (count > 0) {
+          steer.div(count);
+        }
+
+        if (steer.mag() > 0) {
+          steer.normalize();
+          steer.mult(this.maxSpeed);
+          steer.sub(this.velocity);
+          steer.limit(this.maxForce);
+        }
+        return steer;
+      }
+
+      align(letters: Letter[]) {
+        let neighborDistance = 40; // Reduced for better performance
+        let sum = this.p5Instance.createVector(0, 0);
+        let count = 0;
+        for (let i = 0; i < letters.length; i++) {
+          let d = p5.Vector.dist(this.position, letters[i].position);
+          if (d > 0 && d < neighborDistance) {
+            sum.add(letters[i].velocity);
+            count++;
+            // Early exit for performance - limit to 5 neighbors
+            if (count >= 5) break;
+          }
+        }
+        if (count > 0) {
+          sum.div(count);
+          sum.normalize();
+          sum.mult(this.maxSpeed);
+          let steer = p5.Vector.sub(sum, this.velocity);
+          steer.limit(this.maxForce);
+          return steer;
+        } else {
+          return this.p5Instance.createVector(0, 0);
+        }
+      }
+
+      cohesion(letters: Letter[]) {
+        let neighborDistance = 40; // Reduced for better performance
+        let sum = this.p5Instance.createVector(0, 0);
+        let count = 0;
+        for (let i = 0; i < letters.length; i++) {
+          let d = p5.Vector.dist(this.position, letters[i].position);
+          if (d > 0 && d < neighborDistance) {
+            sum.add(letters[i].position);
+            count++;
+            // Early exit for performance - limit to 5 neighbors
+            if (count >= 5) break;
+          }
+        }
+        if (count > 0) {
+          sum.div(count);
+          return this.seek(sum);
+        } else {
+          return this.p5Instance.createVector(0, 0);
+        }
+      }
+    }
+
     const sketch = (p: p5) => {
-      let animationOffset = 0;
+      let flock: Flock;
+      let playing = true;
 
       p.setup = () => {
         p.createCanvas(800, 400);
-        p.background(backgroundColor);
+        p.pixelDensity(2);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.noStroke();
+        p.colorMode(p.RGB); // Use RGB for better fire colors
+
+        flock = new Flock();
+
+        // Add an initial set of letters into the system (reduced for performance)
+        for (let i = 0; i < 30; i++) {
+          let l = new Letter(p.width / 2, p.height / 2, p);
+          flock.addLetter(l);
+        }
+
+        p.background(0);
       };
 
       p.draw = () => {
-        // Clear canvas with background color
-        p.background(backgroundColor);
-        
-        // Set text properties
-        p.textAlign(textAlign as any);
-        p.textSize(fontSize);
-        p.fill(textColor);
-        
-        // Apply font family
-        p.textFont(fontFamily);
-        
-        // Calculate text position
-        let x = p.width / 2;
-        let y = p.height / 2;
-        
-        if (textAlign === 'left') {
-          x = 50;
-        } else if (textAlign === 'right') {
-          x = p.width - 50;
-        }
-        
-        // Add animation effect if enabled
-        if (isAnimated) {
-          animationOffset += 0.05;
-          const wave = p.sin(animationOffset) * 10;
-          y += wave;
+        if (!playing) return;
+
+        p.background(0);
+        flock.run();
+      };
+
+      // Mouse interaction creates fire trails
+      p.mouseDragged = () => {
+        // Create a fire trail effect with variable sizes
+        for (let i = 0; i < 5; i++) {
+          let offsetX = p.random(-15, 15);
+          let offsetY = p.random(-15, 15);
+          let trailLetter = new Letter(p.mouseX + offsetX, p.mouseY + offsetY, p);
           
-          // Add color animation
-          const hue = (p.frameCount * 2) % 360;
-          p.fill(`hsl(${hue}, 70%, 50%)`);
+          // Make trail letters smaller and more varied in size
+          trailLetter.size = p.random(6, 14); // Variable size for fire trail effect
+          trailLetter.maxSpeed = p.random(1.5, 3.5); // Variable speed
+          
+          flock.addLetter(trailLetter);
         }
-        
-        // Draw the text
-        p.text(text, x, y);
-        
-        // Add some visual effects
-        if (isAnimated) {
-          // Add floating particles
-          for (let i = 0; i < 5; i++) {
-            const particleX = p.width / 2 + p.cos(animationOffset + i) * 100;
-            const particleY = p.height / 2 + p.sin(animationOffset + i) * 50;
-            p.fill(255, 100);
-            p.noStroke();
-            p.circle(particleX, particleY, 3);
+      };
+
+      // Add keyboard interaction
+      p.keyPressed = () => {
+        if (p.key === ' ') {
+          playing = !playing;
+        } else if (p.key === 'r' || p.key === 'R') {
+          // Reset flock
+          flock = new Flock();
+          for (let i = 0; i < 30; i++) {
+            let l = new Letter(p.width / 2, p.height / 2, p);
+            flock.addLetter(l);
           }
         }
       };
@@ -87,49 +301,10 @@ export default function TypographyGenerator() {
         p5InstanceRef.current.remove();
       }
     };
-  }, [text, fontSize, textColor, backgroundColor, fontFamily, textAlign, isAnimated]);
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
-
-  const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFontSize(Number(e.target.value));
-  };
-
-  const handleFontWeightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFontWeight(Number(e.target.value));
-  };
-
-  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextColor(e.target.value);
-  };
-
-  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBackgroundColor(e.target.value);
-  };
-
-  const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFontFamily(e.target.value);
-  };
-
-  const handleTextAlignChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTextAlign(e.target.value);
-  };
+  }, [isAnimated]);
 
   const toggleAnimation = () => {
     setIsAnimated(!isAnimated);
-  };
-
-  const resetToDefaults = () => {
-    setText('Hello World');
-    setFontSize(48);
-    setFontWeight(400);
-    setTextColor('#000000');
-    setBackgroundColor('#ffffff');
-    setFontFamily('Arial');
-    setTextAlign('center');
-    setIsAnimated(false);
   };
 
   return (
@@ -138,74 +313,15 @@ export default function TypographyGenerator() {
         <div className={styles.header}>
           <Link href="/" className={styles.backLink}>← Back to Home</Link>
           <h1>Typography Generator</h1>
-          <p>Create beautiful typography with interactive controls and animations</p>
+          <p>Interactive fire trail letters with p5.js - Drag to create glowing fire trails, press Space to pause/play, press R to reset</p>
         </div>
 
         <div className={styles.controls}>
           <div className={styles.controlGroup}>
-            <label htmlFor="text">Text:</label>
-            <input
-              id="text"
-              type="text"
-              value={text}
-              onChange={handleTextChange}
-              placeholder="Enter your text here..."
-            />
-          </div>
-
-          <div className={styles.controlGroup}>
-            <label htmlFor="fontSize">Font Size: {fontSize}px</label>
-            <input
-              id="fontSize"
-              type="range"
-              min="12"
-              max="120"
-              value={fontSize}
-              onChange={handleFontSizeChange}
-            />
-          </div>
-
-          <div className={styles.controlGroup}>
-            <label htmlFor="fontFamily">Font Family:</label>
-            <select id="fontFamily" value={fontFamily} onChange={handleFontFamilyChange}>
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Verdana">Verdana</option>
-              <option value="Courier New">Courier New</option>
-              <option value="Impact">Impact</option>
-              <option value="Comic Sans MS">Comic Sans MS</option>
-            </select>
-          </div>
-
-          <div className={styles.controlGroup}>
-            <label htmlFor="textAlign">Text Alignment:</label>
-            <select id="textAlign" value={textAlign} onChange={handleTextAlignChange}>
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </div>
-
-          <div className={styles.controlGroup}>
-            <label htmlFor="textColor">Text Color:</label>
-            <input
-              id="textColor"
-              type="color"
-              value={textColor}
-              onChange={handleTextColorChange}
-            />
-          </div>
-
-          <div className={styles.controlGroup}>
-            <label htmlFor="backgroundColor">Background Color:</label>
-            <input
-              id="backgroundColor"
-              type="color"
-              value={backgroundColor}
-              onChange={handleBackgroundColorChange}
-            />
+            <h3>Interactive Controls</h3>
+            <p><strong>Drag mouse</strong> to create glowing fire trails</p>
+            <p><strong>Press Space</strong> key to pause/play the animation</p>
+            <p><strong>Press R</strong> key to reset the flock</p>
           </div>
 
           <div className={styles.controlGroup}>
@@ -218,9 +334,15 @@ export default function TypographyGenerator() {
           </div>
 
           <div className={styles.controlGroup}>
-            <button className={styles.resetButton} onClick={resetToDefaults}>
-              Reset to Defaults
-            </button>
+            <h3>About This Flocking System</h3>
+            <p>This is a fire trail flocking simulation featuring:</p>
+            <ul>
+              <li>30 glowing letters that behave like birds</li>
+              <li>Separation, alignment, and cohesion behaviors</li>
+              <li>Multi-layer fire glow effect with RGB colors</li>
+              <li>Variable-sized fire trail creation via mouse drag</li>
+              <li>Real-time flocking physics simulation</li>
+            </ul>
           </div>
         </div>
 
@@ -229,13 +351,26 @@ export default function TypographyGenerator() {
         </div>
 
         <div className={styles.info}>
-          <h3>Features:</h3>
+          <h3>Technical Features:</h3>
           <ul>
-            <li>Real-time typography preview with p5.js</li>
-            <li>Customizable font size, family, and alignment</li>
-            <li>Color picker for text and background</li>
-            <li>Animated effects with floating particles</li>
-            <li>Interactive controls for live editing</li>
+            <li>Optimized flocking behavior simulation with 30 letters</li>
+            <li>Separation, alignment, and cohesion algorithms</li>
+            <li>Multi-layer fire glow effect with RGB color space</li>
+            <li>Interactive mouse drag to create variable-sized fire trails</li>
+            <li>Real-time physics simulation with 60fps performance</li>
+            <li>Wraparound borders for continuous movement</li>
+            <li>Vector-based movement and steering behaviors</li>
+            <li>Performance optimizations: limited neighbors, reduced distances</li>
+          </ul>
+          
+          <h3>Learning Objectives:</h3>
+          <ul>
+            <li>Understanding flocking behavior algorithms</li>
+            <li>Working with p5.js vectors and physics</li>
+            <li>HSB color space and dynamic color generation</li>
+            <li>Interactive mouse events and canvas programming</li>
+            <li>Object-oriented programming with classes</li>
+            <li>Steering behaviors and autonomous agents</li>
           </ul>
         </div>
       </main>

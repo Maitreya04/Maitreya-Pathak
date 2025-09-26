@@ -11,6 +11,7 @@ import styles from './styles.module.css';
 export default function PrototypeTemplate() {
   // Available prototypes in the lab
   const prototypes = [
+
     {
       title: 'Getting Started',
       description: 'Learn how to create a prototype',
@@ -40,6 +41,12 @@ export default function PrototypeTemplate() {
       description: 'Smooth liquid chrome cursor effects',
       path: '/prototypes/liquid-chrome-cursor',
       icon: '💧'
+    },
+    {
+      title: 'Type Generator 2',
+      description: 'Floating typography particles with glow effects',
+      path: '/prototypes/type-generator-2',
+      icon: '✨'
     }
   ];
 

@@ -36,6 +36,18 @@ export default function Home() {
       path: '/prototypes/liquid-chrome-cursor',
       icon: '💧'
     },
+    {
+      title: 'Type Generator 2',
+      description: 'Floating typography particles with glow effects and organic motion',
+      path: '/prototypes/type-generator-2',
+      icon: '✨'
+    },
+    {
+      title: 'Game of Life Text',
+      description: 'Watch your text evolve using Conway\'s Game of Life cellular automaton',
+      path: '/prototypes/game-of-life-text',
+      icon: '🧬'
+    },
     // Add your new prototypes here like this:
     // {
     //   title: 'Your new prototype',

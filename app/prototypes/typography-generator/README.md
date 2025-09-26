@@ -1,53 +1,49 @@
 # Typography Generator
 
-An interactive typography generator built with p5.js that allows you to create beautiful text designs with real-time preview and animation effects.
+A generative typography composition built with p5.js featuring 800+ swirling letters in a mesmerizing radial pattern with organic movement and dynamic color cycling.
 
 ## Features
 
-- **Real-time Typography Preview**: See your text changes instantly with p5.js canvas
-- **Customizable Font Properties**: 
-  - Font size (12px - 120px)
-  - Font family (Arial, Helvetica, Times New Roman, Georgia, Verdana, Courier New, Impact, Comic Sans MS)
-  - Text alignment (Left, Center, Right)
-- **Color Controls**: 
-  - Text color picker
-  - Background color picker
-- **Animation Effects**: 
-  - Animated text with wave motion
-  - Color cycling animation
-  - Floating particle effects
-- **Interactive Controls**: Live editing with sliders, dropdowns, and color pickers
-- **Reset Functionality**: Quick reset to default settings
+- **Generative Typography**: 800+ letters arranged in a radial swirl pattern
+- **Organic Movement**: Perlin noise creates natural, flowing motion
+- **Dynamic Colors**: HSL color space with position-based color cycling
+- **Interactive Controls**: 
+  - Click canvas to pause/play animation
+  - Press 'R' key to regenerate with new random letters
+  - Press 'Space' key to pause/play
+- **Mathematical Precision**: Radial patterns with configurable parameters
+- **High Performance**: 60fps animation with optimized rendering
+- **Breathing Effect**: Gentle in/out motion for organic feel
 
 ## How to Use
 
-1. **Enter Text**: Type your desired text in the text input field
-2. **Adjust Font Size**: Use the slider to change font size from 12px to 120px
-3. **Select Font Family**: Choose from 8 different font families
-4. **Set Text Alignment**: Choose left, center, or right alignment
-5. **Customize Colors**: Use color pickers to change text and background colors
-6. **Add Animation**: Toggle the animation button to add wave motion and particle effects
-7. **Reset**: Use the reset button to return to default settings
+1. **Watch the Animation**: The letters swirl in a mesmerizing pattern
+2. **Interact**: Click anywhere on the canvas to pause/play
+3. **Regenerate**: Press 'R' key to create a new random composition
+4. **Control**: Press 'Space' key for additional pause/play control
+5. **Explore**: Each regeneration creates a unique pattern with different letters
 
 ## Technical Details
 
 ### Dependencies
-- **p5.js**: For canvas rendering and animation
+- **p5.js**: For canvas rendering and generative art
 - **@types/p5**: TypeScript definitions for p5.js
 - **React**: For component structure and state management
 - **Next.js**: For the web framework
 
 ### Key Components
-- **Canvas Rendering**: Uses p5.js to create an 800x400px canvas
-- **State Management**: React hooks manage all typography properties
-- **Real-time Updates**: useEffect hook updates the p5.js sketch when properties change
-- **Animation System**: Frame-based animation with sine wave calculations
+- **Generative System**: 800+ letter particles with individual properties
+- **Radial Mathematics**: Swirl patterns based on angular velocity and radius
+- **Perlin Noise**: Organic movement using p5.js noise functions
+- **HSL Color Space**: Dynamic color generation based on position and time
+- **Interactive Controls**: Mouse and keyboard event handling
 
 ### Animation Features
-- **Wave Motion**: Text moves up and down using sine wave calculations
-- **Color Cycling**: HSL color space animation for smooth color transitions
-- **Particle System**: Floating particles that orbit around the text
-- **Performance**: 60fps animation with optimized rendering
+- **Swirl Motion**: Letters spiral inward with velocity inversely proportional to radius
+- **Breathing Effect**: Gentle radial expansion/contraction using sine waves
+- **Perlin Jitter**: Organic position variation using noise functions
+- **Color Cycling**: HSL hue rotation based on angle and time
+- **Performance**: Optimized rendering with 60fps target
 
 ## File Structure
 
