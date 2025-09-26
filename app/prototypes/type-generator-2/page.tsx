@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import p5 from 'p5';
 import Link from 'next/link';
 import styles from './styles.module.css';
 
 export default function TypeGenerator2() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const p5InstanceRef = useRef<p5 | null>(null);
+  const p5InstanceRef = useRef<any | null>(null);
   
   // State for animation control
   const [isAnimated, setIsAnimated] = useState(true);
@@ -25,9 +24,9 @@ export default function TypeGenerator2() {
       size: number;
       color: any;
       alpha: number;
-      p5Instance: p5;
+      p5Instance: any;
 
-      constructor(x: number, y: number, p: p5) {
+      constructor(x: number, y: number, p: any) {
         this.p5Instance = p;
         this.x = x;
         this.y = y;
@@ -98,7 +97,7 @@ export default function TypeGenerator2() {
       }
     }
 
-    const sketch = (p: p5) => {
+    const sketch = (p: any) => {
       let particles: TextParticle[] = [];
       let playing = true;
 
@@ -163,7 +162,11 @@ export default function TypeGenerator2() {
       };
     };
 
-    p5InstanceRef.current = new p5(sketch, canvasRef.current);
+    (async () => {
+      const mod = await import('p5');
+      const P5 = mod.default as any;
+      p5InstanceRef.current = new P5(sketch, canvasRef.current!);
+    })();
 
     return () => {
       if (p5InstanceRef.current) {
@@ -247,5 +250,6 @@ export default function TypeGenerator2() {
     </div>
   );
 }
+
 
 

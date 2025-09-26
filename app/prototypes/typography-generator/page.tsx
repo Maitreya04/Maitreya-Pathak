@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import p5 from 'p5';
 import Link from 'next/link';
 import styles from './styles.module.css';
 
 export default function TypographyGenerator() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const p5InstanceRef = useRef<p5 | null>(null);
+  const p5InstanceRef = useRef<any | null>(null);
   
   // State for animation control
   const [isAnimated, setIsAnimated] = useState(true);
@@ -43,10 +42,10 @@ export default function TypographyGenerator() {
       maxSpeed: number;
       maxForce: number;
       color: any;
-      p5Instance: p5;
+      p5Instance: any;
       char: string;
 
-      constructor(x: number, y: number, p: p5) {
+      constructor(x: number, y: number, p: any) {
         this.p5Instance = p;
         this.acceleration = p.createVector(0, 0);
         this.velocity = p.createVector(p.random(-1, 1), p.random(-1, 1));
@@ -102,10 +101,11 @@ export default function TypographyGenerator() {
       }
 
       seek(target: any) {
-        let desired = p5.Vector.sub(target, this.position);
+        const P5Ctor = (this.p5Instance as any).constructor;
+        let desired = P5Ctor.Vector.sub(target, this.position);
         desired.normalize();
         desired.mult(this.maxSpeed);
-        let steer = p5.Vector.sub(desired, this.velocity);
+        let steer = P5Ctor.Vector.sub(desired, this.velocity);
         steer.limit(this.maxForce);
         return steer;
       }
@@ -162,9 +162,10 @@ export default function TypographyGenerator() {
         let count = 0;
 
         for (let letter of letters) {
-          let distanceToNeighbor = p5.Vector.dist(this.position, letter.position);
+          const P5Ctor = (this.p5Instance as any).constructor;
+          let distanceToNeighbor = P5Ctor.Vector.dist(this.position, letter.position);
           if (distanceToNeighbor > 0 && distanceToNeighbor < desiredSeparation) {
-            let diff = p5.Vector.sub(this.position, letter.position);
+            let diff = (this.p5Instance as any).constructor.Vector.sub(this.position, letter.position);
             diff.normalize();
             diff.div(distanceToNeighbor);
             steer.add(diff);
@@ -192,7 +193,7 @@ export default function TypographyGenerator() {
         let sum = this.p5Instance.createVector(0, 0);
         let count = 0;
         for (let i = 0; i < letters.length; i++) {
-          let d = p5.Vector.dist(this.position, letters[i].position);
+          let d = (this.p5Instance as any).constructor.Vector.dist(this.position, letters[i].position);
           if (d > 0 && d < neighborDistance) {
             sum.add(letters[i].velocity);
             count++;
@@ -204,7 +205,7 @@ export default function TypographyGenerator() {
           sum.div(count);
           sum.normalize();
           sum.mult(this.maxSpeed);
-          let steer = p5.Vector.sub(sum, this.velocity);
+          let steer = (this.p5Instance as any).constructor.Vector.sub(sum, this.velocity);
           steer.limit(this.maxForce);
           return steer;
         } else {
@@ -217,7 +218,7 @@ export default function TypographyGenerator() {
         let sum = this.p5Instance.createVector(0, 0);
         let count = 0;
         for (let i = 0; i < letters.length; i++) {
-          let d = p5.Vector.dist(this.position, letters[i].position);
+          let d = (this.p5Instance as any).constructor.Vector.dist(this.position, letters[i].position);
           if (d > 0 && d < neighborDistance) {
             sum.add(letters[i].position);
             count++;
@@ -234,7 +235,7 @@ export default function TypographyGenerator() {
       }
     }
 
-    const sketch = (p: p5) => {
+    const sketch = (p: any) => {
       let flock: Flock;
       let playing = true;
 
@@ -294,7 +295,11 @@ export default function TypographyGenerator() {
       };
     };
 
-    p5InstanceRef.current = new p5(sketch, canvasRef.current);
+    (async () => {
+      const mod = await import('p5');
+      const P5 = mod.default as any;
+      p5InstanceRef.current = new P5(sketch, canvasRef.current!);
+    })();
 
     return () => {
       if (p5InstanceRef.current) {
@@ -376,4 +381,4 @@ export default function TypographyGenerator() {
       </main>
     </div>
   );
-}
+} 
