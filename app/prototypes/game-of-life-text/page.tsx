@@ -383,61 +383,61 @@ export default function GameOfLifeText({}: GameOfLifeProps) {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.heart}></div>
-        <h1 className={styles.title}>Game of Life Text Generator</h1>
+    <div className={`${styles.container} film-grain`}>
+      <div className={`${styles.header} camera-chrome px-3 py-2 rounded-sm`}>
+        <div className={`${styles.heart} rec-pulse`} />
+        <h1 className={`${styles.title} camera-glow`}>Game of Life Text Generator</h1>
       </div>
 
-      <div className={styles.controls}>
+      <div className={`${styles.controls} camera-control rounded-sm px-2 py-2`}>
         <button 
           onClick={handleTextSubmit} 
-          className={styles.button}
+          className={`${styles.button} camera-chrome`}
           disabled={isGenerating}
         >
           {isGenerating ? 'Generating...' : 'Generate'}
         </button>
         <button 
           onClick={handleCameraToggle} 
-          className={`${styles.button} ${useCamera ? styles.cameraActive : styles.cameraInactive}`}
+          className={`${styles.button} ${useCamera ? styles.cameraActive : styles.cameraInactive} camera-chrome`}
         >
           {useCamera ? 'Stop Camera' : 'Camera'}
         </button>
         <button 
           onClick={() => setUseTextMode(!useTextMode)} 
-          className={`${styles.button} ${useTextMode ? styles.textModeActive : styles.cellModeActive}`}
+          className={`${styles.button} ${useTextMode ? styles.textModeActive : styles.cellModeActive} camera-chrome`}
         >
           {useTextMode ? 'Text' : 'Cells'}
         </button>
         <button
           onClick={() => setIsRunning(!isRunning)}
-          className={`${styles.button} ${isRunning ? styles.stopButton : styles.startButton}`}
+          className={`${styles.button} ${isRunning ? styles.stopButton : styles.startButton} camera-chrome`}
         >
           {isRunning ? 'Stop' : 'Start'}
         </button>
-        <Link href="/" className={styles.button}>
+        <Link href="/" className={`${styles.button} camera-chrome`}>
           Back to Home
         </Link>
       </div>
 
-      <div className={styles.canvasContainer}>
-        <div className={styles.canvasWrapper}>
+      <div className={`${styles.canvasContainer} camera-viewfinder rounded-sm`}>
+        <div className={`${styles.canvasWrapper}`}>
           <canvas
             ref={canvasRef}
-            className={styles.canvas}
+            className={`${styles.canvas}`}
           />
           {useCamera && (
             <video
               ref={videoRef}
-              className={styles.video}
+              className={`${styles.video}`}
               width={800}
               height={400}
               style={{ display: 'none' }}
             />
           )}
           {showInputText && (
-            <div className={styles.inputTextDisplay}>
-              <div className={styles.inputTextContent}>
+            <div className={`${styles.inputTextDisplay}`}>
+              <div className={`${styles.inputTextContent} camera-glow`}>
                 {text}
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function GameOfLifeText({}: GameOfLifeProps) {
         </div>
       </div>
 
-      <div className={styles.info}>
+      <div className={`${styles.info} camera-control rounded-sm px-3 py-2`}>
         <ul>
           <li>Enter text and click "Generate" to create patterns</li>
           <li>Click "Start" to begin the Game of Life simulation</li>
