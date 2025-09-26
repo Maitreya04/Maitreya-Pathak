@@ -53,7 +53,7 @@ export default function TypeGenerator2() {
           'BOLD', 'ITALIC', 'SERIF', 'SANS', 'DISPLAY', 'SCRIPT', 'MONO',
           'SPACE', 'KERN', 'LEAD', 'TRACK', 'WEIGHT', 'SIZE', 'COLOR'
         ];
-        return words[p.floor(p.random(words.length))];
+        return words[this.p5Instance.floor(this.p5Instance.random(words.length))];
       }
 
       update() {
@@ -61,12 +61,12 @@ export default function TypeGenerator2() {
         this.y += this.vy;
         
         // Add some floating motion
-        this.vx += p.sin(this.p5Instance.frameCount * 0.01 + this.x * 0.01) * 0.01;
-        this.vy += p.cos(this.p5Instance.frameCount * 0.01 + this.y * 0.01) * 0.01;
+        this.vx += this.p5Instance.sin(this.p5Instance.frameCount * 0.01 + this.x * 0.01) * 0.01;
+        this.vy += this.p5Instance.cos(this.p5Instance.frameCount * 0.01 + this.y * 0.01) * 0.01;
         
         // Limit velocity
-        this.vx = p.constrain(this.vx, -2, 2);
-        this.vy = p.constrain(this.vy, -2, 2);
+        this.vx = this.p5Instance.constrain(this.vx, -2, 2);
+        this.vy = this.p5Instance.constrain(this.vy, -2, 2);
         
         // Wrap around screen
         if (this.x < 0) this.x = this.p5Instance.width;

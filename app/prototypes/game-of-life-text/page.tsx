@@ -11,7 +11,7 @@ interface GameOfLifeProps {}
 export default function GameOfLifeText({}: GameOfLifeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const [isRunning, setIsRunning] = useState(false);
   const [text, setText] = useState('HELLO');
   const [cellSize, setCellSize] = useState(8);
@@ -345,8 +345,10 @@ export default function GameOfLifeText({}: GameOfLifeProps) {
     // Add a 3 second delay before generating the pattern
     setTimeout(() => {
       const pattern = useCamera ? cameraToPattern() : textToPattern(text);
-      setCurrentCells(pattern);
-      setNextCells(Array(columnCount).fill(null).map(() => Array(rowCount).fill(0)));
+      if (pattern) {
+        setCurrentCells(pattern);
+        setNextCells(Array(columnCount).fill(null).map(() => Array(rowCount).fill(0)));
+      }
       setIsGenerating(false);
       setShowInputText(false);
     }, 3000);
